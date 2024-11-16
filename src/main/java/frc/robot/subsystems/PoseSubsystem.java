@@ -8,10 +8,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+//import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+//import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
+//import com.pathplanner.lib.util.ReplanningConfig;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -34,14 +36,14 @@ import frc.robot.Robot;
 public class PoseSubsystem extends SubsystemBase {
   private static PoseSubsystem instance;
   private final Swerve s_Swerve;
-  private final VisionSubsystem s_Vision;
+  private final limelight s_Vision;
 
   private final SwerveDrivePoseEstimator poseEstimator;
   private final Field2d field;
   private final Pigeon2 gyro;
   private static Rotation2d targetAngle = null;
   private static Zone zone = Zone.SPEAKER;
-
+   
   private static final TunableOption optUpdatePoseWithVisionAuto = new TunableOption("pose/Update with vision in Auto", false);
 
   public enum Zone {
@@ -51,7 +53,7 @@ public class PoseSubsystem extends SubsystemBase {
   }
 
   /** Creates a new PoseSubsystem. */
-  public PoseSubsystem(Swerve s_Swerve, VisionSubsystem s_Vision) {
+  public PoseSubsystem(Swerve s_Swerve, limelight s_Vision) {
     assert(instance == null);
         instance = this;
         
@@ -60,7 +62,15 @@ public class PoseSubsystem extends SubsystemBase {
 
         gyro = new Pigeon2(Pose.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
-        gyro.setYaw(0);        
+        gyro.setYaw(0);  
+
+        RobotConfig config;
+        try{
+            config = RobotConfig.fromGUISettings();
+          } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+          }
 
         Pose.rotationPID.enableContinuousInput(-180.0, 180.0);
         Pose.rotationPID.setIZone(Pose.rotationIZone); // Only use Integral term within this range
@@ -75,20 +85,26 @@ public class PoseSubsystem extends SubsystemBase {
         field = new Field2d();
         SmartDashboard.putData("pose/Field", field);
 
-        AutoBuilder.configureHolonomic(
+        AutoBuilder.configure(
             this::getPose,
             this::setPose,
-            s_Swerve::getSpeeds, 
-            s_Swerve::driveRobotRelativeAuto,
+            s_Swerve::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            s_Swerve::driveRobotRelative,
             // TODO Configure PIDs
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                new PIDConstants(8.0, 0.0, 0.0), // Translation PID constants
-                new PIDConstants(1.5, 0.0, 0.0), // Rotation PID constants
+            new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                new com.pathplanner.lib.config.PIDConstants(8.0, 0.0, 0.0), // Translation PID constants
+                new com.pathplanner.lib.config.PIDConstants(1.5, 0.0, 0.0), // Rotation PID constants
                 Constants.Swerve.maxSpeed, // Max module speed, in m/s
                 Constants.Swerve.driveRadius, // Drive base radius in meters. Distance from robot center to furthest module.
-                new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
-            Robot::isRed,
+            config,
+            () -> {
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                  return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;;
+            },
             s_Swerve // Reference to Swerve subsystem to set requirements
         );
 
