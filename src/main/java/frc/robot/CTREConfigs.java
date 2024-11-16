@@ -25,9 +25,9 @@ public final class CTREConfigs {
     swerveAngleFXConfig.CurrentLimits.SupplyCurrentLimitEnable =
         Constants.Swerve.angleEnableCurrentLimit;
     swerveAngleFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleCurrentLimit;
-    swerveAngleFXConfig.CurrentLimits.SupplyCurrentThreshold =
+    swerveAngleFXConfig.CurrentLimits.SupplyCurrentLowerLimit = //if wrong this 
         Constants.Swerve.angleCurrentThreshold;
-    swerveAngleFXConfig.CurrentLimits.SupplyTimeThreshold =
+    swerveAngleFXConfig.CurrentLimits.SupplyCurrentLowerTime = // and this
         Constants.Swerve.angleCurrentThresholdTime;
 
     /* PID Config */
@@ -47,9 +47,9 @@ public final class CTREConfigs {
     swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimitEnable =
         Constants.Swerve.driveEnableCurrentLimit;
     swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.driveCurrentLimit;
-    swerveDriveFXConfig.CurrentLimits.SupplyCurrentThreshold =
+    swerveDriveFXConfig.CurrentLimits.SupplyCurrentLowerLimit =
         Constants.Swerve.driveCurrentThreshold;
-    swerveDriveFXConfig.CurrentLimits.SupplyTimeThreshold =
+    swerveDriveFXConfig.CurrentLimits.SupplyCurrentLowerTime =
         Constants.Swerve.driveCurrentThresholdTime;
 
     /* PID Config */
