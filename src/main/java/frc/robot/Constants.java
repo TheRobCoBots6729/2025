@@ -157,51 +157,8 @@ public final class Constants {
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
-  /* Intake motor IDs and power value */
-  public static final class Intake {
-    public static final int topRoller = 21;
-    public static final int bottomRoller = 20;
-    public static final double speed = 0.50;
-  }
 
-  /* Indexer motor IDs, breakbeam, and power value */
-  public static final class Indexer {
-    public static final int leftSide = 15;
-    public static final int rightSide = 14;
-    public static final double shootSpeed = 0.75;
-    public static final double ampSpeed = .75;
-  }
 
-  /* Shooter motor IDs and power value */
-  public static final class Shooter {
-    public static final int leftWheel = 18;
-    public static final int rightWheel = 19;
-    public static final double speed = 0.60;
-    public static final double sideSpeed = .45;
-    public static final double ampSpeed = .20;
-    public static final double ampSpeed1 = .1;
-  }
-
-  /* Climber motor IDs, throughbore encoder, and power value */
-  public static final class Climber {
-    public static final int leftArm = 22;
-    public static final int rightArm = 25;
-    public static final double speed = 0.75;
-    public static final int armPosition = 0;
-  }
-
-  /* StatusLED breakbeam and LED IDs */
-  public static final class StatusLED {
-    public static final int detectNote = 1;
-    public static final int leds = 0;
-  }
-
-  /* MobileMiniShooter (MMS) motor IDs and power values */
-  public static final class MMS {
-    public static final int topShooter = 24;
-    public static final int bottomShooter = 26;
-    public static final double speed = 0.30;
-  }
   /* limelight */
   public static final class vision {
     

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.StatusLED;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,7 +19,7 @@ import frc.robot.subsystems.StatusLED;
  */
 public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
-  private int m_rainbowFirstPixelHue;
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -66,18 +66,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    for (var i = 0; i < StatusLED.ledsBuffer.getLength(); i++) {
-      // Calculate the hue - hue is easier for rainbows because the color shape is a circle so only
-      // one value needs to precess
-      final var hue = (m_rainbowFirstPixelHue + (i * 180 / StatusLED.ledsBuffer.getLength())) % 180;
-      // Set the value
-      StatusLED.ledsBuffer.setHSV(i, hue, 255, 128);
-    }
-    // Increase by to make the rainbow "move" + check bounds
-    m_rainbowFirstPixelHue += 3;
-    m_rainbowFirstPixelHue %= 180;
-    // Set the LEDs
-    StatusLED.leds.setData(StatusLED.ledsBuffer);
+    
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
